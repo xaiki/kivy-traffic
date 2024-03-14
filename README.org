@@ -1,0 +1,21 @@
+#+TITLE: kivy traffic-analysis implementation
+
+* Kivy App
+* install
+you need to get some yolo models from https://github.com/ultralytics/ultralytics
+#+begin_src:
+wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8x.pt
+wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8l.pt
+wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8m.pt
+#+end_src:
+
+#+begin_src:
+python -m venv venv
+source venv/bin/activate.sh
+pip install -r requirements.txt
+#+end_src:
+
+* run
+#+begin_src:
+python kivy_traffic.py --  --source_weights_path ./yolov8n.pt
+#+end_src:
