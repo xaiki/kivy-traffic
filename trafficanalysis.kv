@@ -1,0 +1,47 @@
+<RootLayout>:
+    orientation: 'vertical'
+    BoxLayout:
+        height: '10px'
+        ToggleButton:
+            id: add_zone_btn
+            text: 'Add Zone'
+            on_press: app.add_zone()
+
+        Button:
+            text: 'Remove Zone'
+            on_press: app.remove_zone()
+
+        ToggleButton:
+            id: start_process
+            text: 'Start Process'
+            on_press: app.start_process()
+
+    AnchorLayout:
+        id: anchor
+        anchor_x: 'center'
+        anchor_y: 'top'
+        size_hint: 1, 5
+        VideoWidget:
+            id: video
+            canvas:
+                Rectangle:
+                    id: video_texture
+                    texture: self.texture
+                    pos: 0, 0
+                    size: self.size
+        ZoneShow:
+            id: zones
+            canvas.before:
+                PushMatrix
+                Translate:
+                    xy: (self.x + self.width / 2, self.y + self.height / 2)
+                Rotate:
+                    angle: 180
+                    axis: (0, 1.0, 0)
+                Translate:
+                    xy: (-self.x - self.width / 2, -self.y - self.height / 2)
+            canvas.after:
+                PopMatrix
+            # PaintWidget:
+            #     id: paint
+
