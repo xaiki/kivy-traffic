@@ -297,7 +297,7 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         "--source_video_path",
-        required=True,
+        default=None,
         help="Path to the source video file",
         type=str,
     )
