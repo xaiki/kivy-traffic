@@ -122,6 +122,7 @@ class VideoWidget(BoxLayout):
         self.texture = texture
 
 class RootLayout(BoxLayout):
+    zones = ListProperty([])
     pass
 
 class EventLoopWorker(EventDispatcher):
@@ -218,13 +219,12 @@ class EventLoopWorker(EventDispatcher):
 
 
 class TrafficAnalysisApp(App):
-    painter: Widget
+    painter: Widget = None
 
     def __init__(self, **kwargs):
         super().__init__()
         self.kwargs = kwargs
         self.event_loop_worker = None
-        self.zones = []
 
     def build(self):
         layout = RootLayout()
@@ -253,16 +253,20 @@ class TrafficAnalysisApp(App):
         worker.start()
 
     def add_zone(self):
-        zid = len(self.zones)
+        zid = len(self.root.zones)
         self.painter = painter = PaintWidget(zid)
         self.root.ids.anchor.add_widget(painter)
         self.root.ids.add_zone_btn.text = f"Set IN Zone {zid}"
+        self.root.ids.add_zone_btn.disabled = True
 
         def on_zone(instance, zone):
-            self.zones.append(zone)
-            #self.root.ids.zones.zones = self.zones
+            self.root.zones.append(zone)
+            #self.root.ids.zones.zones = self.root.zones
+
             self.root.ids.add_zone_btn.state = 'normal'
-            self.sync_zones(self.zones)
+            self.root.ids.add_zone_btn.disabled = False
+
+            self.sync_zones(self.root.zones)
             self.root.ids.anchor.remove_widget(painter)
 
         def on_current(instance, current):
@@ -279,9 +283,9 @@ class TrafficAnalysisApp(App):
 
     def remove_zone(self):
         try:
-            self.zones.pop()
-            self.root.ids.zones.zones = self.zones
-            self.sync_zones(self.zones)
+            self.root.zones.pop()
+            self.root.ids.zones.zones = self.root.zones
+            self.sync_zones(self.root.zones)
         except IndexError:
             pass
 
@@ -290,7 +294,7 @@ class TrafficAnalysisApp(App):
         if worker is not None:
             loop = self.event_loop_worker.loop
             # use the thread safe variant to run it on the asyncio event loop:
-            loop.call_soon_threadsafe(worker.set_zones, self.zones)
+            loop.call_soon_threadsafe(worker.set_zones, self.root.zones)
 
     def start_process(self):
         worker = self.event_loop_worker

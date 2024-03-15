@@ -9,11 +9,13 @@
 
         Button:
             text: 'Remove Zone'
+            disabled: True if not len(root.zones) else False
             on_press: app.remove_zone()
 
         ToggleButton:
             id: start_process
             text: 'Start Process'
+            disabled: True if not len(root.zones) else False
             on_press: app.start_process()
 
     AnchorLayout:
