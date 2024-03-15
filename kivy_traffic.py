@@ -85,10 +85,10 @@ class PaintWidget(Widget):
                     #     list(chunks(list(to_int(self.current[0])), 2)),
                     #     list(chunks(list(to_int(self.current[1])), 2))
                     # ]
-                self.line = Line()
-                self.cur_line = []
-            print(self.line.points)
+                self.line = None
 
+    def on_zone_change(self):
+        pass
 
 class ZoneShow(Widget):
     zones = ListProperty([])
@@ -253,21 +253,37 @@ class TrafficAnalysisApp(App):
         worker.start()
 
     def add_zone(self):
-        self.painter = painter = PaintWidget(len(self.zones))
+        zid = len(self.zones)
+        self.painter = painter = PaintWidget(zid)
         self.root.ids.anchor.add_widget(painter)
+        self.root.ids.add_zone_btn.text = f"Set IN Zone {zid}"
+
         def on_zone(instance, zone):
             self.zones.append(zone)
             #self.root.ids.zones.zones = self.zones
             self.root.ids.add_zone_btn.state = 'normal'
             self.sync_zones(self.zones)
             self.root.ids.anchor.remove_widget(painter)
+
+        def on_current(instance, current):
+            zone = len(current)
+            if zone == 1:
+                self.root.ids.add_zone_btn.text = f"Set OUT Zone {zid}"
+            else:
+                self.root.ids.add_zone_btn.text = f"Add Zone {zid + 1}"
+
         painter.bind(zone=on_zone)
+        painter.bind(current=on_current)
 
         print("add zone")
 
     def remove_zone(self):
-        self.zones.pop()
-        self.root.ids.zones.zones = self.zones
+        try:
+            self.zones.pop()
+            self.root.ids.zones.zones = self.zones
+            self.sync_zones(self.zones)
+        except IndexError:
+            pass
 
     def sync_zones(self, zones):
         worker = self.event_loop_worker
