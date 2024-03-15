@@ -2,6 +2,13 @@
 
 * Kivy App
 * install
+** clone repo
+first you need to clone this repository
+#+begin_src:
+git clone https://github.com/xaiki/kivy-traffic
+#+end_src:
+
+** get models
 you need to get some yolo models from https://github.com/ultralytics/ultralytics
 #+begin_src:
 wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8x.pt
@@ -9,6 +16,7 @@ wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8l.pt
 wget https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8m.pt
 #+end_src:
 
+** setup python
 #+begin_src:
 python -m venv venv
 source venv/bin/activate.sh
